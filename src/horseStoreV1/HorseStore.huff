@@ -3,19 +3,39 @@
 #define function readNumberOfHorses() view returns (uint256)
 
 /* Storage Slots */
-#define constant NUMBER_OF_HORSES_LOCATION = FREE_STORAGE_POINTER()
+#define constant NUMBER_OF_HORSES_STORAGE_SLOT = FREE_STORAGE_POINTER()
+
+#define macro MAIN() = takes (0) returns (0) {
+    // Identify which function is being called.
+    0x00 calldataload 0xE0 shr
+    // dup1 0xcdfead2e 
+    dup1 
+
+    // __FUNC_SIG("updateHorseNumber(uint256)")
+    // cast sig "updateHorseNumber(uint256)"
+    __FUNC_SIG(updateHorseNumber) eq updateJump jumpi
+    
+    // __FUNC_SIG("readNumberOfHorses()")
+    // cast sig "readNumberOfHorses()"
+    __FUNC_SIG(readNumberOfHorses) eq readJump jumpi
+
+    updateJump:
+        SET_NUMBER_OF_HORSES()
+    readJump:
+        GET_NUMBER_OF_HORSES()
+}
 
 /* Methods */
 #define macro SET_NUMBER_OF_HORSES() = takes (0) returns (0) {
     0x04 calldataload   // [value]
-    [NUMBER_OF_HORSES_LOCATION]    // [ptr, value]
+    [NUMBER_OF_HORSES_STORAGE_SLOT]    // [ptr, value]
     sstore              // []
     stop
 }
 
 #define macro GET_NUMBER_OF_HORSES() = takes (0) returns (0) {
     // Load value from storage.
-    [NUMBER_OF_HORSES_LOCATION]   // [ptr]
+    [NUMBER_OF_HORSES_STORAGE_SLOT]   // [ptr]
     sload                // [value]
 
     // Store value in memory.
@@ -23,22 +43,4 @@
 
     // Return value
     0x20 0x00 return
-}
-
-#define macro MAIN() = takes (0) returns (0) {
-    // Identify which function is being called.
-    0x00 calldataload 0xE0 shr
-    // __FUNC_SIG("updateHorseNumber(uint256)")
-    // cast sig "updateHorseNumber(uint256)"
-    // dup1 0xcdfead2e eq set jumpi
-    dup1 __FUNC_SIG(updateHorseNumber) eq updateJump jumpi
-    
-    // __FUNC_SIG("readNumberOfHorses()")
-    // cast sig "readNumberOfHorses()"
-    dup1 __FUNC_SIG(readNumberOfHorses) eq readJump jumpi
-
-    updateJump:
-        SET_NUMBER_OF_HORSES()
-    readJump:
-        GET_NUMBER_OF_HORSES()
 }
