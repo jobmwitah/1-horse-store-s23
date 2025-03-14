@@ -11,7 +11,7 @@ remappings = [
     'foundry-huff/=lib/foundry-huff/src/',
     '@openzeppelin/=lib/openzeppelin-contracts/',
     'forge-std/=lib/forge-std/src/',
-
+    'deploy-yul/=lib/deploy-yul/contracts/',
 ]
 
 [fuzz]
