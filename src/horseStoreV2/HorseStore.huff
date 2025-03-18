@@ -735,3 +735,4 @@
     callvalue iszero         // [msg.value == 0, 11 (length), "NON_PAYABLE"]
     REQUIRE()                // []
 }
+
